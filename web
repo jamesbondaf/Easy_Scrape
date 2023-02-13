@@ -1,0 +1,35 @@
+from bs4  import  BeautifulSoup
+import requests
+import pandas as pd
+
+# basically extacting the notices into csv file from a website
+
+def extract():
+    headers={'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
+    url = "https://imsnsit.org/imsnsit/notifications.php"
+    r=requests.get(url,headers)
+    soup=BeautifulSoup(r.content,'html.parser')
+    return soup
+
+# a=extract()
+# print(a.prettify())
+
+def transform(soup):
+    lists=soup.find_all('a',class_='list-data-focus')
+    for list in lists:
+        title=list.findNext('a').text.strip().replace('\n','')
+        print(title)
+        notice={
+            'title':title
+        }
+        Noticelist.append(notice)
+    return
+
+
+Noticelist=[]
+a=extract()
+b=transform(a)
+df=pd.DataFrame(Noticelist)
+df.to_csv('Notices.csv')
+
+
